@@ -5,8 +5,10 @@ class AbstractMelonOrder():
 
     shipped = False
     is_christmas = False
+    tax = 0.00
 
     def __init__(self, species, qty):
+        """Initialize melon order attributes"""
         self.species = species
         self.qty = qty
 
@@ -31,26 +33,23 @@ class AbstractMelonOrder():
 class DomesticMelonOrder(AbstractMelonOrder):
     """A melon order within the USA."""
 
-    def __init__(self, species, qty):
-        """Initialize melon order attributes."""
-
-        super().__init__(self, species, qty)
-        self.order_type = "domestic"
-        self.tax = 0.08
-
+    order_type = "domestic"
+    tax = 0.08
+        
     
 class InternationalMelonOrder(AbstractMelonOrder):
     """An international (non-US) melon order."""
 
+    order_type = "international"
+    tax = 0.17       
+    
     def __init__(self, species, qty, country_code):
         """Initialize melon order attributes."""
 
         super().__init__(species, qty)
         self.country_code = country_code
-        self.order_type = "international"
-        self.tax = 0.17
 
-
+        
     def get_country_code(self):
         """Return the country code."""
 
@@ -62,4 +61,15 @@ class InternationalMelonOrder(AbstractMelonOrder):
         return (super().get_total() 
                 if self.qty >= 10 
                 else (super().get_total() + 3.00))
+
+class GovernmentMelonOrder(AbstractMelonOrder):
+    """A government melon order """
+
+    order_type = "government"
+    passed_inspection = False
+
+    def mark_inspection(self, passed):
+
+        self.passed_inspection = passed
+        
 
