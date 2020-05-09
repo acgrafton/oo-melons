@@ -1,21 +1,38 @@
 """Classes for melon orders."""
 
+from random import randint
+from datetime import datetime
+
 class AbstractMelonOrder():
     """An abstract class base for melon orders to inherit from."""
 
     shipped = False
     is_christmas = False
     tax = 0.00
+    order_datetime = datetime.now()
 
     def __init__(self, species, qty):
         """Initialize melon order attributes"""
         self.species = species
         self.qty = qty
 
+    def get_base_price(self):
+        """Generate base price randomly between 5-9"""
+
+        current_hour = self.order_datetime.hour-6 #Current hour in MST
+        current_dow = self.order_datetime.isoweekday() #Current DOW in MST
+
+        rush_hour_surcharge = 4
+
+        return (randint(5,9) + rush_hour_surcharge 
+                if 8 < current_hour < 11 and current_dow < 6
+                else  randint(5,9)
+                )
+
     def get_total(self):
         """Calculate price, including tax."""
 
-        base_price = 5
+        base_price = self.get_base_price()
         total = (1 + self.tax) * self.qty * base_price
 
         return (1.5 * total if self.is_christmas else total)
